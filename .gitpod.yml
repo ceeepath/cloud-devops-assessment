@@ -1,20 +1,19 @@
 tasks:
-  - name: terraform_installation
+
+  - name: terraform_installation & setup
     before: |
       source ./bin/install_terraform.sh
       source ./bin/set_terraform_cloud_token.sh
       source ./bin/set_tf_alias.sh
-      cp $PROJECT_ROOT/terraform.tfvars.example $PROJECT_ROOT/terraform.tfvars
-            
-  - name: aws-cli
-    env:
-      AWS_CLI_AUTO_PROMPT: on-partial
-    before: |
-      source ./bin/install_aws_cli.sh
+
+  - name: azure-cli
+    command: |
+      sleep 15
+      curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
       source ./bin/set_tf_alias.sh
-
-
+      az --version
+      
+      
 vscode:
   extensions:
-    - amazonwebservices.aws-toolkit-vscode
     - hashicorp.terraform
