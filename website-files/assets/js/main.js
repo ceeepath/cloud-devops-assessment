@@ -1,532 +1,311 @@
+(function ($) {
     "use strict";
 
+    /*----------------------
+    Document-Reader-Function
+    -----------------------*/
+    $(document).on('ready', function () {
 
-    /*--
-        preloader
-    -----------------------------------*/
-     $(window).on('load', function(event) {
-        $('#preloader').delay(500).fadeOut(500);
-    });
+        /*--------------------
+        Show-Body
+        ----------------------*/
+        $('body').css({
+            'opacity': '1'
+        });
 
-    /*--
-        Header Sticky
-    -----------------------------------*/
-
-    window.onscroll = function () {
-        const left = document.getElementById("header");
-
-        if (left.scrollTop > 50 || self.pageYOffset > 50) {
-            left.classList.add("sticky")
-        } else {
-            left.classList.remove("sticky");
-        }
-    }    
-
-    
-    /*--
-        Menu parent Element Icon
-    -----------------------------------*/
-    const $subMenu = document.querySelectorAll('.sub-menu');
-    $subMenu.forEach(function (subMenu) {
-        const menuExpand = document.createElement('span')
-        menuExpand.classList.add('menu-icon')
-        // menuExpand.innerHTML = '+'
-        subMenu.parentElement.insertBefore(menuExpand, subMenu)
-        if (subMenu.classList.contains('mega-menu')) {
-            subMenu.classList.remove('mega-menu')
-            subMenu.querySelectorAll('ul').forEach(function (ul) {
-                ul.classList.add('sub-menu')
-                const menuExpand = document.createElement('span')
-                menuExpand.classList.add('menu-icon')
-                menuExpand.innerHTML = '+'
-                ul.parentElement.insertBefore(menuExpand, ul)
-            })
-        }
-    })
-
-    /*--
-        Search Js
-    -----------------------------------*/
-	var $searchWrap = $('.search-wrap');
-	var $navSearch = $('.search-btn');
-	var $searchClose = $('#search-close');
-
-	$('.search-btn').on('click', function (e) {
-		e.preventDefault();
-		$searchWrap.animate({ opacity: 'toggle' }, 500);
-		$navSearch.add($searchClose).addClass("open");
-	});
-
-	$('.search-close').on('click', function (e) {
-		e.preventDefault();
-		$searchWrap.animate({ opacity: 'toggle' }, 500);
-		$navSearch.add($searchClose).removeClass("open");
-	});
-
-	function closeSearch() {
-		$searchWrap.fadeOut(200);
-		$navSearch.add($searchClose).removeClass("open");
-	}
-
-	$(document.body).on('click', function (e) {
-		closeSearch();
-	});
-
-	$(".search-btn, .main-search-input").on('click', function (e) {
-		e.stopPropagation();
-	});
-
+        /*---------------------
+        Scroll-Top-Button
+        ----------------------*/
+        $.scrollUp({
+            scrollText: '<i class="fa fa-angle-up"></i>',
+            easingType: 'linear',
+            scrollSpeed: 900,
+            animation: 'fade'
+        });
         
-    /*--
-        Mobile Menu 
-    -----------------------------------*/
-
-    /* Get Sibling */
-    const getSiblings = function (elem) {
-        const siblings = []
-        let sibling = elem.parentNode.firstChild
-        while (sibling) {
-            if (sibling.nodeType === 1 && sibling !== elem) {
-                siblings.push(sibling)
-            }
-            sibling = sibling.nextSibling
-        }
-        return siblings
-    }
-
-    /* Slide Up */
-    const slideUp = (target, time) => {
-        const duration = time ? time : 500;
-        target.style.transitionProperty = 'height, margin, padding'
-        target.style.transitionDuration = duration + 'ms'
-        target.style.boxSizing = 'border-box'
-        target.style.height = target.offsetHeight + 'px'
-        target.offsetHeight
-        target.style.overflow = 'hidden'
-        target.style.height = 0
-        window.setTimeout(() => {
-            target.style.display = 'none'
-            target.style.removeProperty('height')
-            target.style.removeProperty('overflow')
-            target.style.removeProperty('transition-duration')
-            target.style.removeProperty('transition-property')
-        }, duration)
-    }
-
-    /* Slide Down */
-    const slideDown = (target, time) => {
-        const duration = time ? time : 500;
-        target.style.removeProperty('display')
-        let display = window.getComputedStyle(target).display
-        if (display === 'none') display = 'block'
-        target.style.display = display
-        const height = target.offsetHeight
-        target.style.overflow = 'hidden'
-        target.style.height = 0
-        target.offsetHeight
-        target.style.boxSizing = 'border-box'
-        target.style.transitionProperty = 'height, margin, padding'
-        target.style.transitionDuration = duration + 'ms'
-        target.style.height = height + 'px'
-        window.setTimeout(() => {
-            target.style.removeProperty('height')
-            target.style.removeProperty('overflow')
-            target.style.removeProperty('transition-duration')
-            target.style.removeProperty('transition-property')
-        }, duration)
-    }
-
-    /* Slide Toggle */
-    const slideToggle = (target, time) => {
-        const duration = time ? time : 500;
-        if (window.getComputedStyle(target).display === 'none') {
-            return slideDown(target, duration)
-        } else {
-            return slideUp(target, duration)
-        }
-    }
-
-
-    /*--
-		Offcanvas/Collapseable Menu 
-	-----------------------------------*/
-    const offCanvasMenu = function (selector) {
-
-        const $offCanvasNav = document.querySelector(selector),
-            $subMenu = $offCanvasNav.querySelectorAll('.sub-menu');
-        $subMenu.forEach(function (subMenu) {
-            const menuExpand = document.createElement('span')
-            menuExpand.classList.add('menu-expand')
-            // menuExpand.innerHTML = '+'
-            subMenu.parentElement.insertBefore(menuExpand, subMenu)
-            if (subMenu.classList.contains('mega-menu')) {
-                subMenu.classList.remove('mega-menu')
-                subMenu.querySelectorAll('ul').forEach(function (ul) {
-                    ul.classList.add('sub-menu')
-                    const menuExpand = document.createElement('span')
-                    menuExpand.classList.add('menu-expand')
-                    menuExpand.innerHTML = '+'
-                    ul.parentElement.insertBefore(menuExpand, ul)
-                })
-            }
-        })
-
-        $offCanvasNav.querySelectorAll('.menu-expand').forEach(function (item) {
-            item.addEventListener('click', function (e) {
-                e.preventDefault()
-                const parent = this.parentElement
-                if (parent.classList.contains('active')) {
-                    parent.classList.remove('active');
-                    parent.querySelectorAll('.sub-menu').forEach(function (subMenu) {
-                        subMenu.parentElement.classList.remove('active');
-                        slideUp(subMenu)
-                    })
-                } else {
-                    parent.classList.add('active');
-                    slideDown(this.nextElementSibling)
-                    getSiblings(parent).forEach(function (item) {
-                        item.classList.remove('active')
-                        item.querySelectorAll('.sub-menu').forEach(function (subMenu) {
-                            subMenu.parentElement.classList.remove('active');
-                            slideUp(subMenu)
-                        })
-                    })
+        /*---------------------
+        Data-Lity-Lightbox
+        ----------------------*/
+        $(document).on('click', '[data-lightbox]', lity);
+        /*----------------------
+        Product-Slider-Carousel
+        -----------------------*/
+        $('.product-slide').owlCarousel({
+            loop: true,
+            margin: 0,
+            responsiveClass: true,
+            nav: false,
+            autoplay: true,
+            autoplayTimeout: 4000,
+            smartSpeed: 1000,
+            navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right" ></i>'],
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                480: {
+                    items: 2
+                },
+                768: {
+                    items: 3
+                },
+                1000: {
+                    items: 4
                 }
-            })
-        })
-    }
-    offCanvasMenu('.offcanvas-menu');
+            }
+        });
 
-  /*--
-    magnificPopup video view 
-  -----------------------------------*/	
-	$('.popup-video').magnificPopup({
-		type: 'iframe'
-	});
+        /*----------------------
+        Product-Slider-Carousel
+        -----------------------*/
+        $('.product-single-slider').owlCarousel({
+            loop: true,
+            margin: 0,
+            responsiveClass: true,
+            nav: false,
+            autoplay: true,
+            autoplayTimeout: 2000,
+            smartSpeed: 1000,
+            animateIn: 'fadeIn',
+            animateOut: 'fadeOut',
+            navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right" ></i>'],
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                480: {
+                    items: 1
+                },
+                768: {
+                    items: 1
+                },
+                1000: {
+                    items: 1
+                }
+            }
+        });
 
-  /*--    
-      Counter Up
-  -----------------------------------*/  
+        /*----------------------
+        Product-Slider-Carousel
+        -----------------------*/
+        $('.product-slider-2').owlCarousel({
+            loop: true,
+            margin: 0,
+            responsiveClass: true,
+            nav: false,
+            autoplay: true,
+            autoplayTimeout: 4000,
+            smartSpeed: 1000,
+            navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right" ></i>'],
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                480: {
+                    items: 1
+                },
+                768: {
+                    items: 1
+                },
+                1000: {
+                    items: 1
+                }
+            }
+        });
 
-    $('.counter').counterUp({
-        delay: 10,
-        time: 1500,
-    });
+        /*----------------------
+        Product-Slider-Carousel
+        -----------------------*/
+        $('.testimonails-2').owlCarousel({
+            loop: true,
+            margin: 0,
+            responsiveClass: true,
+            nav: false,
+            autoplay: true,
+            autoplayTimeout: 4000,
+            smartSpeed: 1000,
+            navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right" ></i>'],
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                480: {
+                    items: 1
+                },
+                768: {
+                    items: 2
+                },
+                1000: {
+                    items: 3
+                }
+            }
+        });
 
-  /*--    
-      Progress Bar
-  -----------------------------------*/  
 
-    if($('.progress-line').length) {
-        $('.progress-line').appear(function(){
-            var el = $(this);
-            var percent = el.data('width');
-            $(el).css('width', percent+'%');
-        }, {accY: 0});
-    }
- 
-    /*--
-        Case Study Active
-	-----------------------------------*/
-    var swiper = new Swiper('.case-study-active', {
-        slidesPerView: 2,
-        spaceBetween: 30,
-        centeredSlides: true,
-        loop: true,        
-        grabCursor: true,
-        navigation: {
-            nextEl: '.case-study-active .swiper-button-next',
-            prevEl: '.case-study-active .swiper-button-prev',
-        },
-        breakpoints: {
-            0: {
-              slidesPerView: 1,
-            },
-            992: {
-              slidesPerView: 2,
-            },
-          },
-    });
+        /*-----------------------
+        Sponsor-Carousel
+        -------------------------*/
+        $('.sponsors').owlCarousel({
+            loop: true,
+            margin: 0,
+            responsiveClass: true,
+            nav: false,
+            center: true,
+            autoplay: true,
+            autoplayTimeout: 4000,
+            smartSpeed: 1000,
+            navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right" ></i>'],
+            responsive: {
+                0: {
+                    items: 3
+                },
+                600: {
+                    items: 4
+                },
+                1000: {
+                    items: 5
+                }
+            }
+        });
 
-    /*--    
-        Brand Active
-    -----------------------------------*/
-    var swiper = new Swiper(".brand-active .swiper-container", {
-        slidesPerView: 5,
-        spaceBetween: 30,
-        loop: true,
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-          },
-          576: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 3,
-          },
-          992: {
-            slidesPerView: 5,
-          },
-        },
-    });
 
-    /*--
-        Team Active
-	-----------------------------------*/
-    var swiper = new Swiper('.team-active', {
-        slidesPerView: 3,
-        spaceBetween: 30,
-        loop: true,
-        pagination: {
-            el: ".team-active .swiper-pagination",
-            clickable: true,
-        },
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-          },
-          576: {
-            slidesPerView: 1,
-          },
-          768: {
-            slidesPerView: 2,
-          },
-          992: {
-            slidesPerView: 3,
-          }
+
+        /*----------------------
+        Smoth-Scroll-JS
+        -----------------------*/
+        $('.mainmenu-area a[href*="#"]')
+            .not('[href="#"]')
+            .not('[href="#0"]')
+            .on('click', function (event) {
+                // On-page links
+                if (
+                    location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
+                    location.hostname == this.hostname
+                ) {
+                    // Figure out element to scroll to
+                    var target = $(this.hash);
+                    target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                    // Does a scroll target exist?
+                    if (target.length) {
+                        // Only prevent default if animation is actually gonna happen
+                        event.preventDefault();
+                        $('html, body').animate({
+                            scrollTop: target.offset().top
+                        }, 1000, function () {
+                            // Callback after animation
+                            // Must change focus!
+                            var $target = $(target);
+                            $target.focus();
+                            if ($target.is(":focus")) { // Checking if the target was focused
+                                return false;
+                            } else {
+                                $target.attr('tabindex', '-1'); // Adding tabindex for elements not focusable
+                                $target.focus(); // Set focus again
+                            };
+                        });
+                    }
+                }
+            });
+
+        /*--------------------
+        Header-Title-Set
+        ----------------------*/
+        $("h1,h2,h3,h4,h5,h6").each(function () {
+            var title_val = $(this).text();
+            $(this).attr('title', title_val);
+        });
+
+        /*---------------------
+        Click-Bubble-JS
+        ----------------------*/
+        $('body').clickBubble({
+            color: '#674DD6',
+            size: 50,
+            time: 500,
+            borderWidth: 2
+        });
+
+
+
+        /*-- Drop-Down-Menu--*/
+        function dropdown_menu() {
+            $('.hamburger .mainmenu').fadeOut();
+            var sub_menu = $('.mainmenu .sub-menu'),
+                menu_a = $('.mainmenu ul li a');
+            sub_menu.siblings('a').append('<i class="fa fa-angle-right"></i>')
+            sub_menu.hide();
+            sub_menu.siblings('a').on('click', function (event) {
+                event.preventDefault();
+                $(this).parent('li').siblings('li').find('.sub-menu').slideUp();
+                $(this).siblings('.sub-menu').find('.sub-menu').slideUp();
+                $(this).siblings('.sub-menu').slideToggle();
+                $(this).parents('li').siblings('li').removeClass('open');
+                $(this).siblings('.sub-menu').find('li.open').removeClass('open');
+                $(this).parent('li').toggleClass('open');
+                return false;
+            });
         }
-    });
+        dropdown_menu();
 
-    /*--
-        Service-2 Active
-	-----------------------------------*/
-    var swiper = new Swiper('.service-2-active', {
-        slidesPerView: 3,
-        spaceBetween: 30,
-        loop: true,
-        pagination: {
-            el: ".service-2-active .swiper-pagination",
-            clickable: true,
-        },
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-          },
-          576: {
-            slidesPerView: 1,
-          },
-          768: {
-            slidesPerView: 2,
-          },
-          992: {
-            slidesPerView: 3,
-          }
+
+        /*-- Burger-Menu --*/
+        function burger_menu() {
+            var burger = $('.burger'),
+                hm_menu = $('.hamburger .mainmenu');
+
+            burger.on('click', function () {
+                $(this).toggleClass('play');
+                $(this).siblings('.mainmenu').fadeToggle();
+            });
+
         }
+        burger_menu();
+
+
+
+        /*---------------------
+        Mail-Chimp-Integration
+        -----------------------*/
+        $('#mc-form').ajaxChimp({
+            url: 'http://www.devitfamily.us14.list-manage.com/subscribe/post?u=b2a3f199e321346f8785d48fb&amp;id=d0323b0697', //Set Your Mailchamp URL
+            callback: function (resp) {
+                if (resp.result === 'success') {
+                    $('.subscrie-form input, .subscrie-form button').fadeOut();
+                }
+            }
+        });
+
+        /*-----------------------
+        Mouse-Move-Parallax
+        -------------------------*/
+        $(document).on("mousemove", function (e) {
+            $('.layer').parallax(50, e);
+            $('.layer1').parallax(30, e);
+            $('.layer2').parallax(60, e);
+            $('.layer3').parallax(90, e);
+        });
+
     });
 
-    /*--
-        Service-3 Active
-	-----------------------------------*/
-    var swiper = new Swiper('.service-3-active', {
-        slidesPerView: 3,
-        spaceBetween: 30,
-        loop: true,
-        pagination: {
-            el: ".service-3-active .swiper-pagination",
-            clickable: true,
-        },
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-          },
-          576: {
-            slidesPerView: 1,
-          },
-          768: {
-            slidesPerView: 2,
-          },
-          992: {
-            slidesPerView: 3,
-          }
-        }
+    /*------------------------
+    Window-Load-Function
+    -------------------------*/
+    $(window).on("load", function () {
+
+        /*--------------------
+        Preloader-JS
+        ---------------------*/
+        $('.preloader').fadeOut(500);
+
+
+        /*-------------------
+        Wow-Animation-JS
+        ---------------------*/
+        new WOW().init({
+            mobile: true,
+        });
+
+
     });
 
-    /*--
-        Testimonial Active
-	-----------------------------------*/
-    var swiper = new Swiper('.testimonial-active', {
-        slidesPerView: 2,
-        spaceBetween: 30,
-        loop: true,
-        pagination: {
-            el: ".testimonial-active .swiper-pagination",
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.testimonial-active .swiper-button-next',
-            prevEl: '.testimonial-active .swiper-button-prev',
-        },
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-          },
-          576: {
-            slidesPerView: 1,
-          },
-          768: {
-            slidesPerView: 2,
-          },
-          992: {
-            slidesPerView: 2,
-          }
-        }
-    });
-
-    /*--
-        Testimonial-2 Active
-	-----------------------------------*/
-    var swiper = new Swiper('.testimonial-2-active', {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        loop: true,        
-        pagination: {
-            el: ".testimonial-2-active .swiper-pagination",
-            clickable: true,
-        },
-    });
-
-    /*--
-        Service Active
-	-----------------------------------*/
-    var swiper = new Swiper('.service-2-active', {
-        slidesPerView: 3,
-        spaceBetween: 30,
-        loop: true,
-        pagination: {
-            el: ".service-2-active .swiper-pagination",
-            clickable: true,
-        },
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-          },
-          576: {
-            slidesPerView: 1,
-          },
-          768: {
-            slidesPerView: 2,
-          },
-          992: {
-            slidesPerView: 3,
-          }
-        }
-    });
-
-    /*--
-        Testimonial-3 Active
-	-----------------------------------*/
-    var swiper = new Swiper('.testimonial-3-active', {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        loop: true,        
-        pagination: {
-            el: ".testimonial-3-active .swiper-pagination",
-            clickable: true,
-        },
-    });
-
-    /*--
-        Testimonial-4 Active
-	-----------------------------------*/
-    var swiper = new Swiper('.testimonial-4-active', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        loop: true, 
-        navigation: {
-          nextEl: '.testimonial-4-active .swiper-button-next',
-          prevEl: '.testimonial-4-active .swiper-button-prev',
-        },
-    });
-
-    /*--
-        Testimonial-7 Active
-	-----------------------------------*/
-    var swiper = new Swiper('.testimonial-7-active', {
-        slidesPerView: 3,
-        spaceBetween: 20,
-        centeredSlides: true,
-        loop: true,
-        pagination: {
-          el: ".testimonial-7-active .swiper-pagination",
-          clickable: true,
-        },
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-          },
-          576: {
-            slidesPerView: 1,
-          },
-          768: {
-            slidesPerView: 2,
-            centeredSlides: false,
-          },
-          992: {
-            slidesPerView: 3,
-          }
-        }
-    });
-
-     /*--
-        Service-6 Active
-	-----------------------------------*/
-    var swiper = new Swiper('.service-6-active', {
-      slidesPerView: 3,
-      spaceBetween: 30,
-      loop: true,
-      pagination: {
-          el: ".service-6-active .swiper-pagination",
-          clickable: true,
-      },
-      breakpoints: {
-        0: {
-          slidesPerView: 1,
-        },
-        576: {
-          slidesPerView: 2,
-        },
-        768: {
-          slidesPerView: 2,
-        },
-        992: {
-          slidesPerView: 3,
-        }
-      }
-  });
-
-  /*--
-        Testimonial-8 Active
-    -----------------------------------*/
-    var swiper = new Swiper('.testimonial-8-active', {
-      slidesPerView: 1,
-      spaceBetween: 30,
-      loop: true,  
-      pagination: {
-        el: ".testimonial-8-active .swiper-pagination",
-        clickable: true,
-      },      
-  });
-
-    /*--
-        AOS
-    -----------------------------------*/   
-    AOS.init({
-        duration: 1200,
-        once: true,
-    });
-
-
-
-
+})(jQuery);
