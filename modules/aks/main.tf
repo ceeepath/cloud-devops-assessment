@@ -17,3 +17,9 @@ resource "azurerm_kubernetes_cluster" "main" {
     type = "SystemAssigned"
   }
 }
+
+resource "local_file" "kubeconfig" {
+  depends_on = [azurerm_kubernetes_cluster.main]
+  filename   = "config"
+  content    = azurerm_kubernetes_cluster.main.kube_config_raw
+}
