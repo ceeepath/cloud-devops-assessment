@@ -1,9 +1,10 @@
 tasks:
 
-  - name: terraform_installation & setup
+  - name: terraform-and-kubectl-installation
     before: |
       source ./bin/install_terraform.sh
       source ./bin/set_terraform_cloud_token.sh
+      source ./bin/install_kubectl.sh
       source ./bin/set_tf_alias.sh
 
   - name: azure-cli
