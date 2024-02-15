@@ -21,6 +21,9 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
+      client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     
     steps:
       - name: Checkout Git Repo
@@ -47,11 +50,16 @@ jobs:
          run: |
           kubectl version --client
                 
-      - name: Authenticate to AKS Cluster
-        run: |
-          mkdir ~/.kube
-          mv config ~/.kube/config
-          ls ~/.kube
+      - uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: azure/aks-set-context@v3
+        with:
+          resource-group: 'cloud-devops-assessment'
+          cluster-name: 'adekunle-cluster'
       
       - name: Deploy website
         run: |
