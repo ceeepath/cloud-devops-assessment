@@ -50,9 +50,8 @@ jobs:
       - name: Authenticate to AKS Cluster
         run: |
           mkdir ~/.kube
-          touch ~/.kube/config
+          mv config ~/.kube/config
           ls ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
       
       - name: Deploy website
         run: |
