@@ -52,3 +52,6 @@ jobs:
           mkdir ~/.kube
           touch ~/.kube/config
           ls ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          head -5 ~/.kube/config
+          tail -5 ~/.kube/config
