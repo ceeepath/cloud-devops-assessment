@@ -20,6 +20,7 @@ jobs:
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
     
     steps:
       - name: Checkout Git Repo
@@ -43,4 +44,9 @@ jobs:
         uses: yokawasa/action-setup-kube-tools@v0.9.2
         with:
          kubectl: '1.28.7'
-         run: kubectl version --client
+         run: |
+          kubectl version --client
+          mkdir ~/.kube
+          touch ~/.kube/config
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          kubectl get node
