@@ -10,7 +10,9 @@ resource "azurerm_kubernetes_cluster" "main" {
     node_count          = var.node_count
     vm_size             = "Standard_B2s"
     type                = "VirtualMachineScaleSets"
+    enable_node_public_ip = true
     enable_auto_scaling = false
+    temporary_name_for_rotation = "system"
   }
 
   identity {
