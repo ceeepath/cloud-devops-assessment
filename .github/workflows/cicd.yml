@@ -46,7 +46,14 @@ jobs:
          kubectl: '1.28.7'
          run: |
           kubectl version --client
+                
+      - name: Authenticate to AKS Cluster
+        run: |
           mkdir ~/.kube
           touch ~/.kube/config
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-          kubectl get node
+
+      - name: Deploy website
+        run: |
+          kubectl apply -f website-deployment.yml
+          kubectl get all
