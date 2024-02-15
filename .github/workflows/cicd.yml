@@ -52,6 +52,9 @@ jobs:
           mkdir ~/.kube
           touch ~/.kube/config
           ls ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-          head -5 ~/.kube/config
-          tail -5 ~/.kube/config
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+      
+      - name: Deploy website
+        run: |
+          kubectl apply -f website-deployment.yml
+          kubectl get all
