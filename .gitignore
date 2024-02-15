@@ -34,4 +34,4 @@ override.tf.json
 terraform.rc
 
 # Ignore kubeconfig file
-# config
+ config
