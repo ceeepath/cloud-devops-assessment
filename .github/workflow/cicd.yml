@@ -38,3 +38,9 @@ jobs:
         run: |
           docker build -t ceeepath/my-website:latest .
           docker push ceeepath/my-website:latest
+      
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: '<version>' # default is latest stable
+        id: install
