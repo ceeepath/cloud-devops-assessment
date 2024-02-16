@@ -68,7 +68,7 @@ I wrote a Pod manifest to host the website image on AKS and a service of type Lo
 ### GitHub Actions Workflow
 I configured a GitHub Actions workflow that is triggered on push events. This workflow runs on an Ubuntu server, clones the repository, installs and login to docker. It builds the image and pushes it to docker hub then it applies the pod and service manifest file to deploy the website on AKS using kubectl within the workflow.
 
-### Challenges and Learning Experience
+## Challenges and Learning Experience
 I encountered a few challenges during the course of this project, some due to my mistakes and some are technical ones that i did not envisage. However, i was able to find a solution to all the issues i encountered. Below are some of the issues i encountered;
 
 - While Setting up my IDE and trying to install Terraform and Azure-cli, i got the error message below. I noticed the error was as a result of the multiple tasks running and there was a dependency lock so i had to add a `sleep 60` command to ensure the `terraform-and-kubectl-installation` task completes before the `azure-cli & docker login` begins execution. 
