@@ -8,6 +8,11 @@ variable "aks_cluster_name" {
   type        = string
 }
 
+variable "vm_sizes" {
+  description = "(Required) The size of the Virtual Machine, such as Standard_DS2_v2."
+  type        = string
+}
+
 variable "kubernetes_version" {
   description = "(Optional) Version of Kubernetes specified when creating the AKS managed cluster."
   type        = string
