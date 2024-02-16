@@ -12,7 +12,7 @@ resource "azurerm_kubernetes_cluster" "main" {
     type                = "VirtualMachineScaleSets"
     enable_node_public_ip = true
     enable_auto_scaling = false
-    temporary_name_for_rotation = "system"
+    #temporary_name_for_rotation = "system"
   }
 
   identity {
